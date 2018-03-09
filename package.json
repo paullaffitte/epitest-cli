@@ -1,0 +1,24 @@
+{
+  "name": "epitest-cli",
+  "version": "1.0.0",
+  "description": "A command-line interface for Epitest",
+  "main": "src/epitest.js",
+  "dependencies": {
+    "commander": "^2.15.0",
+    "inquirer": "^5.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paullaffitte/epitest-cli.git"
+  },
+  "author": "Paul Laffitte",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/paullaffitte/epitest-cli/issues"
+  },
+  "homepage": "https://github.com/paullaffitte/epitest-cli#readme"
+}
