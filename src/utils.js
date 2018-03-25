@@ -1,6 +1,10 @@
 'use strict';
 
 const { prompt } = require('inquirer');
+const Configstore = require('configstore');
+const pkg = require('../package.json');
+
+const conf = new Configstore(pkg.name);
 
 function promptFiltered(questions, data) {
   questions = questions.filter(entry => {
@@ -12,6 +16,12 @@ function promptFiltered(questions, data) {
   });
 }
 
+function isLogged() {
+  return conf.get('userToken') ? true : false;
+}
+
 module.exports = {
-  promptFiltered
+  conf,
+  promptFiltered,
+  isLogged,
 };

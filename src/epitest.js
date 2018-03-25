@@ -4,12 +4,8 @@
 
 const program = require('commander');
 const { prompt } = require('inquirer');
-const Configstore = require('configstore');
-const pkg = require('../package.json');
 const utils = require('./utils.js');
 const api = require('./api.js');
-
-const conf = new Configstore(pkg.name);
 
 program
   .version('0.0.0')
@@ -38,11 +34,19 @@ program
         return api.login(answers.username, answers.password);
       })
       .then(data => {
-        conf.set('userToken', data.response);
-        console.log('Successfully connected to your Epitest account!')
+        utils.conf.set('userToken', data.response);
+        console.log('Successfully logged in your Epitest account!')
       })
       .catch(console.error);
   });
+
+program
+  .command('logout')
+  .description('logout from Epitest')
+  .action(() => {
+    utils.conf.delete('userToken');
+    console.log('Successfully logged out of your Epitest account!')
+  })
 
 program
   .command('build [project]')
