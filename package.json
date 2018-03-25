@@ -1,6 +1,6 @@
 {
   "name": "epitest-cli",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "A command-line interface for Epitest",
   "main": "src/epitest.js",
   "dependencies": {

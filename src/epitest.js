@@ -1,17 +1,43 @@
 #! /usr/bin/env node
 const program = require('commander');
 const { prompt } = require('inquirer');
+const utils = require('./utils.js');
+const api = require('./api.js');
 
 program
-  .version('0.0.1')
+  .version('0.0.0')
   .option('-r, --remote', 'build on a remote server')
   .description('Epitest CLI');
+
+program
+  .command('login [email]')
+  .alias('l')
+  .description('login on epitest')
+  .action(email => {
+    let loginPrompt = [
+      {
+        type: 'input',
+        name: 'email',
+        message: 'Email: '
+      },
+      {
+        type: 'password',
+        name: 'password',
+        message: 'Password: '
+      }
+    ];
+
+    prompt(utils.filterPrompt(loginPrompt, {email}))
+      .then(answers => {
+        api.login(answers.email, answers.password);
+      });
+  });
 
 program
   .command('build [project]')
   .alias('b')
   .description('build and test a project')
-  .action((project) => {
+  .action(project => {
     let promises = new Promise(resolve => { resolve() });
 
     if (!program.remote)
