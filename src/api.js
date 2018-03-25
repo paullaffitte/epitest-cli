@@ -6,7 +6,9 @@ const utils = require('./utils.js')
 const apiUrl = 'https://api.arthurchaloin.com/epitest';
 
 axios.defaults.baseURL = 'https://api.arthurchaloin.com/epitest';
-axios.defaults.headers.common['Authorization'] = utils.conf.get('userToken');
+
+if (utils.isLogged())
+  axios.defaults.headers.common['Authorization'] = utils.conf.get('userToken');
 
 axios.interceptors.response.use(response => {
   return response.data;
@@ -16,7 +18,10 @@ axios.interceptors.response.use(response => {
 
 function errorHandler(message) {
   let throwNewError = (message, error) => {
-    throw `${message}: ${error.response.status} ${error.response.statusText}`;
+    if (error && error.response)
+      throw `${message}: ${error.response.status} ${error.response.statusText}`;
+    else
+      throw message;
   }
   return throwNewError.bind(null, message);
 }

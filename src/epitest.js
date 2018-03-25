@@ -5,7 +5,7 @@
 const program = require('commander');
 const { prompt } = require('inquirer');
 const utils = require('./utils.js');
-const api = require('./api.js');
+const controllers = require('./controllers.js');
 
 program
   .version('0.0.0')
@@ -31,11 +31,7 @@ program
 
     utils.promptFiltered(loginPrompt, {username})
       .then(answers => {
-        return api.login(answers.username, answers.password);
-      })
-      .then(data => {
-        utils.conf.set('userToken', data.response);
-        console.log('Successfully logged in your Epitest account!')
+        return controllers.login(answers.username, answers.password);
       })
       .catch(console.error);
   });
@@ -43,10 +39,7 @@ program
 program
   .command('logout')
   .description('logout from Epitest')
-  .action(() => {
-    utils.conf.delete('userToken');
-    console.log('Successfully logged out of your Epitest account!')
-  })
+  .action(controllers.logout);
 
 program
   .command('build [project]')
@@ -55,12 +48,7 @@ program
   .action(project => {
     if (!project)
       project = utils.getRepositoryName();
-
-    api.build(project)
-      .then(() => {
-        console.log(`Build started: https://epitest.arthurchaloin.com/project/${project}`);
-      })
-      .catch(console.error);
+    controllers.build(project).catch(console.error);
   });
 
 program.parse(process.argv);
