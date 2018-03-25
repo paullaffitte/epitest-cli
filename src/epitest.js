@@ -52,24 +52,15 @@ program
   .command('build [project]')
   .alias('b')
   .description('build and test a project')
-  .option('-r, --remote', 'build on a remote server')
-  .action((project, options) => {
-    let buildPrompt = [
-      {
-        type: 'input',
-        name: 'project',
-        message: 'Project: '
-      }
-    ];
+  .action(project => {
+    if (!project)
+      project = utils.getRepositoryName();
 
-    utils.promptFiltered(buildPrompt, {
-      project,
-      remote: options.remote
-    })
-    .then(answers => {
-      api.build(answers.project, answers.remote);
-    })
-    .catch(console.error);
+    api.build(project)
+      .then(() => {
+        console.log(`Build started: https://epitest.arthurchaloin.com/project/${project}`);
+      })
+      .catch(console.error);
   });
 
 program.parse(process.argv);

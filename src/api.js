@@ -1,9 +1,12 @@
 'use strict';
 
 const axios = require('axios');
+const utils = require('./utils.js')
+
 const apiUrl = 'https://api.arthurchaloin.com/epitest';
 
 axios.defaults.baseURL = 'https://api.arthurchaloin.com/epitest';
+axios.defaults.headers.common['Authorization'] = utils.conf.get('userToken');
 
 axios.interceptors.response.use(response => {
   return response.data;
@@ -13,7 +16,7 @@ axios.interceptors.response.use(response => {
 
 function errorHandler(message) {
   let throwNewError = (message, error) => {
-    throw `${message} - ${error.response.status} ${error.response.statusText}`;
+    throw `${message}: ${error.response.status} ${error.response.statusText}`;
   }
   return throwNewError.bind(null, message);
 }
@@ -23,15 +26,11 @@ function login(username, password) {
     username: username,
     password
   })
-  .catch(errorHandler('Login failed.'));
+  .catch(errorHandler('Login failed'));
 }
 
-function build(project, remote) {
-  console.log('let\'s build ' + (project ? project : 'something nice') + ' ' + (remote ? 'remote' : 'local') + 'ly!');
-  return new Promise(resolve => {
-    resolve('OK');
-  })
-  .catch(errorHandler('Build failed.'));
+function build(project) {
+  return axios.post(`/jobs/${project}/build`).catch(errorHandler('Build failed'));
 }
 
 module.exports = {
