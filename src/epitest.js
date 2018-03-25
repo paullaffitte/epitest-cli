@@ -4,23 +4,27 @@
 
 const program = require('commander');
 const { prompt } = require('inquirer');
+const Configstore = require('configstore');
+const pkg = require('../package.json');
 const utils = require('./utils.js');
 const api = require('./api.js');
+
+const conf = new Configstore(pkg.name);
 
 program
   .version('0.0.0')
   .description('Epitest CLI');
 
 program
-  .command('login [email]')
+  .command('login [username]')
   .alias('l')
   .description('login on epitest')
-  .action(email => {
+  .action(username => {
     let loginPrompt = [
       {
         type: 'input',
-        name: 'email',
-        message: 'Email: '
+        name: 'username',
+        message: 'username: '
       },
       {
         type: 'password',
@@ -29,12 +33,13 @@ program
       }
     ];
 
-    utils.promptFiltered(loginPrompt, {email})
+    utils.promptFiltered(loginPrompt, {username})
       .then(answers => {
-        return api.login(answers.email, answers.password);
+        return api.login(answers.username, answers.password);
       })
-      .then(response => {
-        console.log(response);
+      .then(data => {
+        conf.set('userToken', data.response);
+        console.log('Successfully connected to your Epitest account!')
       })
       .catch(console.error);
   });
