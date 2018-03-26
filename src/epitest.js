@@ -8,7 +8,7 @@ const utils = require('./utils.js');
 const controllers = require('./controllers.js');
 
 program
-  .version('0.0.0')
+  .version('0.0.1')
   .description('Epitest CLI');
 
 program
